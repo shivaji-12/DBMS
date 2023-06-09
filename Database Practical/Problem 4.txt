@@ -1,0 +1,55 @@
+Aim: Design at 10 SQL queries for suitable database applications using SQL DML statements: all types of join, sub-query and view.
+For the given Library database
+BOOK (Book_ISBN [PK], Title[Not Null], Publisher_ Name, price[Check Price>0], Date_Of_Publication,Book_Copy ), 
+BOOK_AUTHORS (Book_ISBN [PK]Author_Name [PK], Author_City)
+    a) Select Book_ISBN, Title, Author_Name from relations Book and Book_Authors INNER JOIN on attribute Book_ISBN.
+    b) Select Book_ISBN, Title, Publisher, Author_Name from relations Book and Book_Authors LEFT OUTER JOIN on attribute Book_ISBN.
+    c) Select Book_ISBN, Title, Publisher, Author_Name from relations Book and Book_Authors RIGHT OUTER JOIN on attribute Book_ISBN.
+d)Select Book_ISBN, Title from relation Book whose author is living in City =’Pune’
+
+______________________________________________________________________________________________________
+
+CREATE TABLE BOOK (
+    ->     Book_ISBN VARCHAR(10) PRIMARY KEY,
+    ->     Title VARCHAR(100) NOT NULL,
+    ->     Publisher_Name VARCHAR(100),
+    ->     Price DECIMAL(8, 2) CHECK (Price > 0),
+    ->     Date_Of_Publication DATE,
+    ->     Book_Copy INT
+    -> );
+
+CREATE TABLE BOOK_AUTHORS (
+    Book_ISBN VARCHAR(10),
+    Author_Name VARCHAR(100),
+    Author_City VARCHAR(100),
+    PRIMARY KEY (Book_ISBN, Author_Name),
+    FOREIGN KEY (Book_ISBN) REFERENCES BOOK(Book_ISBN)
+);
+
+
+SELECT b.Book_ISBN, b.Title, ba.Author_Name
+FROM BOOK b
+INNER JOIN BOOK_AUTHORS ba ON b.Book_ISBN = ba.Book_ISBN;
+
+
+SELECT b.Book_ISBN, b.Title, b.Publisher_Name, ba.Author_Name
+FROM BOOK b
+LEFT JOIN BOOK_AUTHORS ba ON b.Book_ISBN = ba.Book_ISBN;
+
+
+SELECT b.Book_ISBN, b.Title, b.Publisher_Name, ba.Author_Name
+FROM BOOK b
+RIGHT JOIN BOOK_AUTHORS ba ON b.Book_ISBN = ba.Book_ISBN;
+
+
+SELECT b.Book_ISBN, b.Title
+FROM BOOK b
+INNER JOIN BOOK_AUTHORS ba ON b.Book_ISBN = ba.Book_ISBN
+WHERE ba.Author_City = 'Pune';
+
+
+
+
+
+
+

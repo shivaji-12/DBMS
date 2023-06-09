@@ -1,0 +1,56 @@
+use practical
+
+
+db.createCollection("Book")
+
+
+db.Book.insertMany([
+  {
+    book_isbn: "ISBN1",
+    title: "Book 1",
+    publisher_name: "Publisher 1",
+    author: {
+      name: "Author 1",
+      address: "Address 1",
+      phone_no: {
+        landline: "123456789",
+        mobile: "987654321"
+      }
+    },
+    publisher_city: "Pune",
+    price: 10.99,
+    copies: 10
+  },
+  {
+    book_isbn: "ISBN2",
+    title: "Book 2",
+    publisher_name: "Publisher 2",
+    author: {
+      name: "Author 2",
+      address: "Address 2",
+      phone_no: {
+        landline: "234567890",
+        mobile: "876543210"
+      }
+    },
+    publisher_city: "Mumbai",
+    price: 9.99,
+    copies: 15
+  },
+  // Add more documents as needed
+]);
+
+db.Book.find({ publisher_city: "Pune" });
+
+
+db.Book.deleteMany({ title: /^D/ });
+
+
+db.Book.updateMany({ publisher_name: "Pearson" }, { $set: { publisher_city: "Pune" } });
+
+
+db.Book.find({ publisher_name: "Pearson" });
+
+
+
+

@@ -1,0 +1,28 @@
+Write a PL/SQL program to check whether a date falls on weekend i.e. SATURDAY or SUNDAY.
+_________________________________________________________________________________________________
+
+DELIMITER $$
+CREATE PROCEDURE CheckWeekend(dateToCheck DATE)
+BEGIN
+    DECLARE dayOfWeek VARCHAR(9);
+    
+    SET dayOfWeek = DATE_FORMAT(dateToCheck, '%W');
+    
+    IF dayOfWeek = 'Saturday' OR dayOfWeek = 'Sunday' THEN
+        SELECT 'Weekend' AS Result;
+    ELSE
+        SELECT 'Not Weekend' AS Result;
+    END IF;
+    
+END$$
+DELIMITER ;
+
+
+CALL CheckWeekend('2023-05-28'); -- Sunday (Weekend)
+
+
+CALL CheckWeekend('2023-05-29'); -- Monday (Not Weekend)
+
+
+
+

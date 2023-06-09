@@ -1,0 +1,48 @@
+Consider Employee table
+
+Perform the following
+ 1. Display all the fields of employee table
+2. Retrieve employee number and their salary
+3. Retrieve average salary of all employee
+4. Retrieve number of employee
+ 5. Retrieve distinct number of employee
+ 6. Retrieve total salary of employee group by employee name and count similar names
+ 7. Retrieve total salary of employee which is greater than >120000
+8. Display name of employee in descending order
+9. Display details of employee whose name is AMIT and salary greater than 50000;
+
+_______________________________________________________________________________________
+
+SELECT * FROM Employee;
+
+
+SELECT EmpNo, Salary FROM Employee;
+
+
+SELECT AVG(Salary) AS AverageSalary FROM Employee;
+
+
+SELECT COUNT(*) AS TotalEmployees FROM Employee;
+
+
+SELECT COUNT(DISTINCT EmpNo) AS DistinctEmployees FROM Employee;
+
+
+SELECT EmpName, SUM(Salary) AS TotalSalary, COUNT(*) AS NameCount
+FROM Employee
+GROUP BY EmpName;
+
+
+SELECT SUM(Salary) AS TotalSalary
+FROM Employee
+WHERE Salary > 120000;
+
+
+SELECT EmpName FROM Employee
+ORDER BY EmpName DESC;
+
+
+SELECT * FROM Employee
+WHERE EmpName = 'AMIT' AND Salary > 50000;
+
+

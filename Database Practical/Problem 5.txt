@@ -1,0 +1,75 @@
+
+Write a PL/SQL block of code for the following requirements:-
+Schema:
+Borrower(Rollin, Name, DateofIssue, NameofBook, Status)
+Fine(Roll_no, Date, Amt)
+    a. Accept roll_no & name of book from user.
+    b. Check the number of days (from date of issue), if days are between 15 to 30 then fine amount will be Rs 5per day.
+    c. If no. of days>30, per day fine will be Rs 50 per day & for days less than 30, Rs. 5 per day.
+    d. After submitting the book, status will change from I to R.
+    e. If condition of fine is true, then details will be stored into fine table.
+
+____________________________________________________________________________________________________________________________________
+
+
+CREATE TABLE Borrower (
+  Roll_no INT PRIMARY KEY,
+  Name VARCHAR(100),
+  DateofIssue DATE,
+  NameofBook VARCHAR(100),
+  Status VARCHAR(1)
+);
+
+CREATE TABLE Fine (
+  Roll_no INT,
+  Date DATE,
+  Amt DECIMAL(10,2),
+  FOREIGN KEY (Roll_no) REFERENCES Borrower(Roll_no)
+);
+
+INSERT INTO Borrower (Roll_no, Name, DateofIssue, NameofBook, Status)
+VALUES (1, 'John', '2023-01-01', 'Book A', 'I');
+
+INSERT INTO Fine (Roll_no, Date, Amt)
+VALUES (1, '2023-01-16', 75);
+
+
+DELIMITER //
+CREATE PROCEDURE CalculateFine(IN p_roll_no INT, IN p_name_of_book VARCHAR(100))
+BEGIN
+  DECLARE v_days INT;
+  DECLARE v_fine_amount DECIMAL(10, 2);
+  
+  -- Calculate the number of days from the date of issue
+  
+  SELECT DATEDIFF(NOW(), DateofIssue) INTO v_days
+  FROM Borrower
+  WHERE Roll_no = p_roll_no AND NameofBook = p_name_of_book;
+  
+  -- Check the number of days and calculate the fine amount
+  
+  IF v_days > 30 THEN
+    SET v_fine_amount = v_days * 50;
+  ELSE
+    SET v_fine_amount = v_days * 5;
+  END IF;
+  
+  -- Update the status and insert into the Fine table
+  
+  UPDATE Borrower
+  SET Status = 'R'
+  WHERE Roll_no = p_roll_no AND NameofBook = p_name_of_book;
+  
+  INSERT INTO Fine (Roll_no, Date, Amt)
+  VALUES (p_roll_no, CURDATE(), v_fine_amount);
+  
+  SELECT v_fine_amount AS FineAmount;
+END //
+
+
+CALL CalculateFine(1, 'Book A')
+
+
+
+
+

@@ -1,0 +1,39 @@
+db.createCollection("ORDERS")
+
+
+db.ORDERS.insert({
+  cust_id: "abc123",
+  ord_date: new Date("Oct 04, 2012"),
+  status: 'A',
+  price: 50,
+  items: [
+    { sku: "xxx", qty: 25, price: 1 },
+    { sku: "yyy", qty: 25, price: 1 }
+  ]
+})
+
+
+db.ORDERS.count()
+
+
+db.ORDERS.aggregate([
+  { $group: { _id: null, total: { $sum: "$price" } } }
+])
+
+
+db.ORDERS.aggregate([
+  { $group: { _id: "$cust_id", total: { $sum: "$price" } } }
+])
+
+db.ORDERS.aggregate([
+  { $group: { _id: "$cust_id", total: { $sum: "$price" } } },
+  { $sort: { total: 1 } }
+])
+
+
+db.ORDERS.createIndex({ cust_id: 1 })
+
+
+
+
+

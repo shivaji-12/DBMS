@@ -1,0 +1,64 @@
+Aim: Design and Implement any 5 query using MongoDB.
+Problem Statement: With reference to Book collection in Assignment B-1 write MongoDB Queries for
+(book_isbn,title,punlisher_name,author(Name, Address, Phone No[landline, mobile]), publisher_city, price,copies
+        a. Update Book Copies as “10” whose Book Publisher is  “Tata MacGraw Hill”.
+        b. Display name of publishers as per no of books published by them in ascending order.
+        c. Get publisher names who published at least one book written by author name like ‘K%’.
+        d. Delete the book  from Book table written by Author ‘Korth’.
+
+_______________________________________________________________________________________________________________________________
+use practical
+
+
+db.createCollection("Book")
+
+db.Book.insertMany([
+  {
+    book_isbn: "ISBN1",
+    title: "Book 1",
+    publisher_name: "Publisher 1",
+    author: {
+      name: "Author 1",
+      address: "Address 1",
+      phone_no: {
+        landline: "123456789",
+        mobile: "987654321"
+      }
+    },
+    publisher_city: "Pune",
+    price: 10.99,
+    copies: 10
+  },
+  {
+    book_isbn: "ISBN2",
+    title: "Book 2",
+    publisher_name: "Publisher 2",
+    author: {
+      name: "Author 2",
+      address: "Address 2",
+      phone_no: {
+        landline: "234567890",
+        mobile: "876543210"
+      }
+    },
+    publisher_city: "Mumbai",
+    price: 9.99,
+    copies: 15
+  },
+  // Add more documents as needed
+]);
+
+db.Book.updateMany({ publisher_name: "Tata MacGraw Hill" }, { $set: { copies: "10" } })
+
+
+db.Book.aggregate([
+  { $group: { _id: "$publisher_name", count: { $sum: 1 } } },
+  { $sort: { count: 1 } }
+])
+
+
+db.Book.distinct("publisher_name", { "author.Name": { $regex: /^K/i } })
+
+
+db.Book.deleteMany({ "author.Name": "Korth" })
+

@@ -1,0 +1,76 @@
+
+For the given Library database
+BOOK (Book_ISBN [PK], Title[Not Null], Publisher_ Name, price[Check Price>0], Date_Of_Publication,Book_Copy ), 
+BOOK_AUTHORS (Book_ISBN [PK,FK]Author_Name [PK], Author_City) 
+Solve the following Assignments -
+Aim: Design at least 10 SQL DML queries for suitable database applications using SQL DML statements: Insert, Select, Update, Delete with operators, functions and set operators
+    i) Display name of publishers as per no of books published by them in ascending order.
+    ii) Get publisher names who published at least one book written by author name like ‘K%’.
+    iii) Get book name and Authors names where book written by maximum authors.
+    iv) Get publisher names accordingly books published alphabetically
+    v) Find the no of books published in 01 Jan 2014 to till date.
+    vi) Delete the book from Book table written by Author ‘Korth’.
+
+______________________________________________________________________________________________________
+
+CREATE TABLE BOOK (
+    ->     Book_ISBN VARCHAR(10) PRIMARY KEY,
+    ->     Title VARCHAR(100) NOT NULL,
+    ->     Publisher_Name VARCHAR(100),
+    ->     Price DECIMAL(8, 2) CHECK (Price > 0),
+    ->     Date_Of_Publication DATE,
+    ->     Book_Copy INT
+    -> );
+
+CREATE TABLE BOOK_AUTHORS (
+    Book_ISBN VARCHAR(10),
+    Author_Name VARCHAR(100),
+    Author_City VARCHAR(100),
+    PRIMARY KEY (Book_ISBN, Author_Name),
+    FOREIGN KEY (Book_ISBN) REFERENCES BOOK(Book_ISBN)
+);
+
+SELECT Publisher_Name, COUNT(*) AS Book_Count
+FROM BOOK
+GROUP BY Publisher_Name
+ORDER BY Book_Count ASC;
+SELECT DISTINCT Publisher_Name
+FROM BOOK
+WHERE Book_ISBN IN (
+    SELECT Book_ISBN
+    FROM BOOK_AUTHORS
+    WHERE Author_Name LIKE 'K%'
+);
+
+SELECT b.Title, GROUP_CONCAT(ba.Author_Name) AS Authors
+FROM BOOK b
+JOIN BOOK_AUTHORS ba ON b.Book_ISBN = ba.Book_ISBN
+GROUP BY b.Book_ISBN, b.Title
+HAVING COUNT(DISTINCT ba.Author_Name) = (
+    SELECT MAX(author_count)
+    FROM (
+        SELECT COUNT(DISTINCT Author_Name) AS author_count
+        FROM BOOK_AUTHORS
+        GROUP BY Book_ISBN
+    ) AS counts
+);
+
+SELECT DISTINCT Publisher_Name
+FROM BOOK
+ORDER BY Publisher_Name ASC;
+
+
+SELECT COUNT(*) AS Book_Count
+FROM BOOK
+WHERE Date_Of_Publication >= '2014-01-01';
+
+DELETE b
+FROM BOOK b
+JOIN BOOK_AUTHORS ba ON b.Book_ISBN = ba.Book_ISBN
+WHERE ba.Author_Name = 'Korth';
+
+
+
+
+
+

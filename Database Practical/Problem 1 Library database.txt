@@ -1,0 +1,57 @@
+For the given Library database
+BOOK (Book_ISBN [PK], Title[Not Null], Publisher_ Name, price[Check Price>0], Date_Of_Publication,Book_Copy ), 
+BOOK_AUTHORS (Book_ISBN [PK,FK]Author_Name [PK], Author_City) 
+Solve the following Assignments -
+
+Aim: Design and Develop SQL DDL statements which demonstrate the use of SQL objects such as Table, View, Index, Sequence, Synonyms
+    a) Create tables BOOK & BOOK_AUTHORS with all constraints.(As per Library Database)
+    b) Create view BOOK_AUTHOR_INFO consisting Book_ISBN, Title from BOOK Table and Author_Name from  BOOK_AUTHORS Table in ascending order of ISBN no.
+    c) Create an index on Book_Author on table on attribute “Author_Name”.
+    d) Create table Book_Auto_Increment (BookID int Auto_increament=100, Book Name) insert five records in table.
+            e)Create Synonyms for your Database (E.g. Library Database as LibDB) and view all
+_______________________________________________________________________________________________________________________________________________________
+
+CREATE TABLE BOOK (
+    ->     Book_ISBN VARCHAR(10) PRIMARY KEY,
+    ->     Title VARCHAR(100) NOT NULL,
+    ->     Publisher_Name VARCHAR(100),
+    ->     Price DECIMAL(8, 2) CHECK (Price > 0),
+    ->     Date_Of_Publication DATE,
+    ->     Book_Copy INT
+    -> );
+
+CREATE TABLE BOOK_AUTHORS (
+    Book_ISBN VARCHAR(10),
+    Author_Name VARCHAR(100),
+    Author_City VARCHAR(100),
+    PRIMARY KEY (Book_ISBN, Author_Name),
+    FOREIGN KEY (Book_ISBN) REFERENCES BOOK(Book_ISBN)
+);
+
+
+CREATE VIEW BOOK_AUTHOR_INFO AS
+SELECT BOOK.Book_ISBN, BOOK.Title, BOOK_AUTHORS.Author_Name
+FROM BOOK
+JOIN BOOK_AUTHORS ON BOOK.Book_ISBN = BOOK_AUTHORS.Book_ISBN
+ORDER BY BOOK.Book_ISBN ASC;
+
+SELECT * FROM BOOK_AUTHOR_INFO;
+
+CREATE INDEX idx_author_name ON BOOK_AUTHOR (Author_Name);
+
+CREATE TABLE Book_Auto_Increment (
+  BookID INT AUTO_INCREMENT PRIMARY KEY,
+  BookName VARCHAR(255)
+);
+
+INSERT INTO Book_Auto_Increment (BookName)
+VALUES
+  ('Book 1'),
+  ('Book 2'),
+  ('Book 3'),
+  ('Book 4'),
+  ('Book 5');
+
+
+
+

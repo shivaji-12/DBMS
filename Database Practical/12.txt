@@ -1,0 +1,84 @@
+Aim: Implement aggregation and indexing with suitable example using MongoDB
+Problem statement: Create a collection named “ORDERS” that contain documents of the following prototype and solve the following queries:
+ {
+  cust_id: "abc123",
+  ord_date: new Date("Oct 04, 2012"),
+  status: 'A',
+  price: 50,
+  items: [ { sku: "xxx", qty: 25, price: 1 },
+           { sku: "yyy", qty: 25, price: 1 } ]
+}
+1.For each unique cust_id, sum the price field, results sorted by sum.
+2.For each unique cust_id, ord_date grouping, sum the price field.
+3.For cust_id with multiple records, return the cust_id and the corresponding record count.
+4.For each unique cust_id with status A, sum the price field.
+________________________________________________________________________________________________
+
+db.createCollection("ORDERS")
+
+
+db.ORDERS.insert({
+  cust_id: "abc123",
+  ord_date: new Date("Oct 04, 2012"),
+  status: 'A',
+  price: 50,
+  items: [
+    { sku: "xxx", qty: 25, price: 1 },
+    { sku: "yyy", qty: 25, price: 1 }
+  ]
+})
+
+
+db.ORDERS.aggregate([
+  {
+    $group: {
+      _id: "$cust_id",
+      total_price: { $sum: "$price" }
+    }
+  },
+  {
+    $sort: { total_price: 1 }
+  }
+])
+
+db.ORDERS.aggregate([
+  {
+    $group: {
+      _id: { cust_id: "$cust_id", ord_date: "$ord_date" },
+      total_price: { $sum: "$price" }
+    }
+  }
+])
+
+
+db.ORDERS.aggregate([
+  {
+    $group: {
+      _id: "$cust_id",
+      count: { $sum: 1 }
+    }
+  },
+  {
+    $match: {
+      count: { $gt: 1 }
+    }
+  }
+])
+
+
+db.ORDERS.aggregate([
+  {
+    $match: {
+      status: "A"
+    }
+  },
+  {
+    $group: {
+      _id: "$cust_id",
+      total_price: { $sum: "$price" }
+    }
+  }
+])
+
+
+

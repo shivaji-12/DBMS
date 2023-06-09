@@ -1,0 +1,33 @@
+Given the table EMPLOYEE (EmpNo, Name, Salary, Designation, DeptID) write a cursor to select the five highest paid employees from the table.
+EMPLOYEE (EmpNo, Name, Salary, Designation, DeptID)
+________________________________________________________________________________________________________________
+
+CREATE TABLE ()
+
+DECLARE
+  CURSOR c_employee IS
+    SELECT EmpNo, Name, Salary, Designation, DeptID
+    FROM EMPLOYEE
+    ORDER BY Salary DESC
+    FETCH FIRST 5 ROWS ONLY;
+
+  v_empNo EMPLOYEE.EmpNo%TYPE;
+  v_name EMPLOYEE.Name%TYPE;
+  v_salary EMPLOYEE.Salary%TYPE;
+  v_designation EMPLOYEE.Designation%TYPE;
+  v_deptID EMPLOYEE.DeptID%TYPE;
+BEGIN
+  OPEN c_employee;
+
+  LOOP
+    FETCH c_employee INTO v_empNo, v_name, v_salary, v_designation, v_deptID;
+    EXIT WHEN c_employee%NOTFOUND;
+
+    -- Process the employee record here
+    DBMS_OUTPUT.PUT_LINE('EmpNo: ' || v_empNo || ', Name: ' || v_name || ', Salary: ' || v_salary || ', Designation: ' || v_designation || ', DeptID: ' || v_deptID);
+  END LOOP;
+
+  CLOSE c_employee;
+END;
+
+

@@ -1,0 +1,49 @@
+Write a PL/SQL block of Stored Procedure and Stored Function proc_Grade for following problem statement.
+Write a Stored Procedure namely proc_Grade for the categorization of student. If marks scored by students in examination is <=1500 and marks>=990 then student will be placed in distinction category if marks scored are between 989 and 900 category is first class, if marks 899 and 825 category is Higher Second Class.
+______________________________________________________________________________________________________________________________________________
+
+
+-- Create the table to store student information
+CREATE TABLE Student (
+  student_id INT PRIMARY KEY,
+  student_name VARCHAR(50),
+  marks INT
+);
+
+-- Insert sample data into the Student table
+INSERT INTO Student (student_id, student_name, marks)
+VALUES (1, 'John', 1450),
+       (2, 'Jane', 980),
+       (3, 'Alice', 910),
+       (4, 'Bob', 850);
+
+-- Create the stored procedure proc_Grade
+DELIMITER //
+CREATE PROCEDURE proc_Grade (IN p_student_id INT)
+BEGIN
+  DECLARE v_marks INT;
+  DECLARE v_category VARCHAR(20);
+
+  -- Retrieve the marks for the given student_id
+  SELECT marks INTO v_marks FROM Student WHERE student_id = p_student_id;
+
+  -- Determine the category based on the marks
+  IF v_marks >= 990 AND v_marks <= 1500 THEN
+    SET v_category = 'Distinction';
+  ELSEIF v_marks >= 900 AND v_marks <= 989 THEN
+    SET v_category = 'First Class';
+  ELSEIF v_marks >= 825 AND v_marks <= 899 THEN
+    SET v_category = 'Higher Second Class';
+  ELSE
+    SET v_category = 'No Category';
+  END IF;
+
+  -- Print the student's category
+  SELECT CONCAT('Student ID: ', p_student_id, ', Category: ', v_category) AS Result;
+END //
+DELIMITER ;
+
+-- Call the stored procedure proc_Grade
+CALL proc_Grade(1); -- Categorize student with student_id = 1
+CALL proc_Grade(3); -- Categorize student with student_id = 3
+

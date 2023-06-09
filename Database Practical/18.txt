@@ -1,0 +1,29 @@
+Consider the schema for Company Database:
+EMPLOYEE(SSN, Name, Address, Sex, Salary, SuperSSN, DNo)
+DEPARTMENT(DNo, DName, MgrSSN, MgrStartDate)
+ DLOCATION(DNo,DLoc)
+ PROJECT(PNo, PName, PLocation, DNo)
+ WORKS_ON(SSN, PNo, Hours)
+1.For each department that has more than five employees, retrieve the department number and the number of its employees who are making more than Rs. 6,00,000.
+2. Show the resulting salaries if every employee working on the ‘IoT’ project is given a 10 percent raise.
+
+_____________________________________________________
+SELECT DNo, COUNT(*) AS Num_Employees
+FROM EMPLOYEE
+WHERE Salary > 600000
+GROUP BY DNo
+HAVING COUNT(*) > 5;
+
+
+UPDATE EMPLOYEE
+SET Salary = Salary * 1.1
+WHERE SSN IN (
+  SELECT SSN
+  FROM WORKS_ON
+  WHERE PNo = (SELECT PNo FROM PROJECT WHERE PName = 'IoT')
+);
+
+
+
+
+
